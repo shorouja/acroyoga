@@ -14,10 +14,25 @@
 - `APP_ENV=prod` set on server
 
 ## Immediate
-- [ ] Regenerate `APP_SECRET` (currently empty)
-- [ ] Core entities: `Exercise`, `Skill`, `ExerciseGroup`
-- [ ] Run migrations, verify at `/api/docs`
-- [ ] Auth: `make:user` + JWT (`lexik/jwt-authentication-bundle`)
+
+### Local dev setup (prerequisite for entity work)
+- [x] Regenerate `APP_SECRET`
+- [ ] Install PHP 8.4 locally (winget)
+- [ ] Install Composer locally (winget)
+- [ ] Install Symfony CLI locally (winget)
+- [ ] `composer install` in `api/` locally
+- [ ] Local `api/.env.local` with SQLite for dev DB
+- [ ] Verify with `php bin/console list`
+
+### Data model
+- [ ] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
+- [ ] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
+- [ ] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
+- [ ] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
+- [ ] Run migrations on server, verify at `/api/docs`
+
+### Auth
+- [ ] `make:user` + JWT (`lexik/jwt-authentication-bundle`)
 
 ## Mid-Term
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
