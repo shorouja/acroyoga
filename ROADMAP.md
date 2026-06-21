@@ -11,24 +11,18 @@
 - Branch protection on `master` and `dev`
 - GitHub Actions auto-deploy on push to `master` (api/**)
 - Server running from `/var/www/acroyoga`, Caddyfile updated
-- `APP_ENV=prod` set on server
+- `APP_ENV=prod` + `APP_SECRET` set on server
+- PHP 8.4 + Composer + Symfony CLI installed locally
+- `composer install` done locally, SQLite dev DB configured
+- `make:entity` verified working locally
 
 ## Immediate
 
-### Local dev setup (prerequisite for entity work)
-- [x] Regenerate `APP_SECRET`
-- [ ] Install PHP 8.4 locally (winget)
-- [ ] Install Composer locally (winget)
-- [ ] Install Symfony CLI locally (winget)
-- [ ] `composer install` in `api/` locally
-- [ ] Local `api/.env.local` with SQLite for dev DB
-- [ ] Verify with `php bin/console list`
-
 ### Data model
-- [ ] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
-- [ ] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
-- [ ] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
-- [ ] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
+- [x] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
+- [x] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
+- [x] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
+- [x] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
 - [ ] Run migrations on server, verify at `/api/docs`
 
 ### Auth
