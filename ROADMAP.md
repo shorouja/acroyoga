@@ -15,15 +15,16 @@
 - PHP 8.4 + Composer + Symfony CLI installed locally
 - `composer install` done locally, SQLite dev DB configured
 - `make:entity` verified working locally
+- Full data model: entities, enums, repositories, migration
+- `/api/docs` live with all 10 resources
 
 ## Immediate
 
-### Data model
-- [x] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
-- [x] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
-- [x] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
-- [x] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
-- [ ] Run migrations on server, verify at `/api/docs`
+### Fix migration workflow
+- [ ] Migrations generated locally against SQLite produce broken SQL for PostgreSQL (`AUTOINCREMENT` vs `SERIAL`). Fix: generate migrations against PostgreSQL — either via a local PostgreSQL connection or by running `make:migration` on the server after pulling changes.
+
+### Fix Caddyfile in deploy pipeline
+- [ ] Caddyfile fix (`handle` instead of `handle_path`, `/bundles/*` block) was applied manually on the server. Add to `docs/deployment.md` and ensure it survives future server rebuilds.
 
 ### Auth
 - [ ] `make:user` + JWT (`lexik/jwt-authentication-bundle`)
