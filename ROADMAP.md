@@ -13,27 +13,24 @@
 - Server running from `/var/www/acroyoga`, Caddyfile updated
 - `APP_ENV=prod` + `APP_SECRET` set on server
 - PHP 8.4 + Composer + Symfony CLI installed locally
-- `composer install` done locally, SQLite dev DB configured
 - `make:entity` verified working locally
 - Full data model: entities, enums, repositories, migration
 - `/api/docs` live with all 10 resources
+- Migration workflow: PostgreSQL 17 via Docker locally (`docker-compose.yml`), `make:migration` now generates correct SQL
+- Caddyfile in repo (`infra/Caddyfile`), copied to server on every deploy — rebuild-safe
+- JWT auth: `lexik/jwt-authentication-bundle` v3.2, RS256 keypair, `POST /api/login`, API routes protected
 
 ## Immediate
 
-### Fix migration workflow
-- [ ] Migrations generated locally against SQLite produce broken SQL for PostgreSQL (`AUTOINCREMENT` vs `SERIAL`). Fix: generate migrations against PostgreSQL — either via a local PostgreSQL connection or by running `make:migration` on the server after pulling changes.
-
-### Fix Caddyfile in deploy pipeline
-- [ ] Caddyfile fix (`handle` instead of `handle_path`, `/bundles/*` block) was applied manually on the server. Add to `docs/deployment.md` and ensure it survives future server rebuilds.
-
-### Auth
-- [ ] `make:user` + JWT (`lexik/jwt-authentication-bundle`)
+- [ ] Register endpoint: `POST /api/register` — create user with hashed password
+- [ ] Migrate server schema: pull new auth config to server, run `lexik:jwt:generate-keypair --env=prod`
 
 ## Mid-Term
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
 - [ ] Caddyfile: add `try_files` fallback for SPA routing
 - [ ] CORS: configure `nelmio/cors-bundle` for frontend origin
 - [ ] GitHub Actions: add frontend deploy job
+- [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 
 ## Operations
 - [ ] PostgreSQL backups: `pg_dump` + cron + offsite (Backblaze B2 or S3)
@@ -44,3 +41,4 @@
 - [ ] Transactional email: Brevo / Postmark + SPF/DKIM/DMARC DNS records
 - [ ] Rate limiting on registration endpoint
 - [ ] GDPR: Impressum, Datenschutzerklärung, user data deletion
+- [ ] Auth at scale: evaluate Auth0 / Keycloak once self-managed JWT keys become operational overhead (not needed until multi-server or team access control is required)
