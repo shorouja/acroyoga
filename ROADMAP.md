@@ -13,24 +13,24 @@
 - Server running from `/var/www/acroyoga`, Caddyfile updated
 - `APP_ENV=prod` + `APP_SECRET` set on server
 - PHP 8.4 + Composer + Symfony CLI installed locally
-- `composer install` done locally, SQLite dev DB configured
 - `make:entity` verified working locally
 - Full data model: entities, enums, repositories, migration
 - `/api/docs` live with all 10 resources
 - Migration workflow: PostgreSQL 17 via Docker locally (`docker-compose.yml`), `make:migration` now generates correct SQL
 - Caddyfile in repo (`infra/Caddyfile`), copied to server on every deploy — rebuild-safe
+- JWT auth: `lexik/jwt-authentication-bundle` v3.2, RS256 keypair, `POST /api/login`, API routes protected
 
 ## Immediate
 
-### Auth
-- [ ] `lexik/jwt-authentication-bundle`: install, configure firewalls, generate keypair, protect `/api` routes
+- [ ] Register endpoint: `POST /api/register` — create user with hashed password
+- [ ] Migrate server: add sudoers entries for caddy, run `lexik:jwt:generate-keypair --env=prod`, add `JWT_PASSPHRASE` to `.env.local`
 
 ## Mid-Term
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
-- [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 - [ ] Caddyfile: add `try_files` fallback for SPA routing
 - [ ] CORS: configure `nelmio/cors-bundle` for frontend origin
 - [ ] GitHub Actions: add frontend deploy job
+- [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 
 ## Operations
 - [ ] PostgreSQL backups: `pg_dump` + cron + offsite (Backblaze B2 or S3)
