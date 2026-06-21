@@ -17,20 +17,17 @@
 - `make:entity` verified working locally
 - Full data model: entities, enums, repositories, migration
 - `/api/docs` live with all 10 resources
+- Migration workflow: PostgreSQL 17 via Docker locally (`docker-compose.yml`), `make:migration` now generates correct SQL
+- Caddyfile in repo (`infra/Caddyfile`), copied to server on every deploy — rebuild-safe
 
 ## Immediate
 
-### Fix migration workflow
-- [ ] Migrations generated locally against SQLite produce broken SQL for PostgreSQL (`AUTOINCREMENT` vs `SERIAL`). Fix: generate migrations against PostgreSQL — either via a local PostgreSQL connection or by running `make:migration` on the server after pulling changes.
-
-### Fix Caddyfile in deploy pipeline
-- [ ] Caddyfile fix (`handle` instead of `handle_path`, `/bundles/*` block) was applied manually on the server. Add to `docs/deployment.md` and ensure it survives future server rebuilds.
-
 ### Auth
-- [ ] `make:user` + JWT (`lexik/jwt-authentication-bundle`)
+- [ ] `lexik/jwt-authentication-bundle`: install, configure firewalls, generate keypair, protect `/api` routes
 
 ## Mid-Term
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
+- [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 - [ ] Caddyfile: add `try_files` fallback for SPA routing
 - [ ] CORS: configure `nelmio/cors-bundle` for frontend origin
 - [ ] GitHub Actions: add frontend deploy job
@@ -44,3 +41,4 @@
 - [ ] Transactional email: Brevo / Postmark + SPF/DKIM/DMARC DNS records
 - [ ] Rate limiting on registration endpoint
 - [ ] GDPR: Impressum, Datenschutzerklärung, user data deletion
+- [ ] Auth at scale: evaluate Auth0 / Keycloak once self-managed JWT keys become operational overhead (not needed until multi-server or team access control is required)
