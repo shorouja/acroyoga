@@ -1,0 +1,5 @@
+- [ ] hybrid app for ios/android viewing 
+- [ ] responsive design anyway?
+- [ ] tests written
+- [ ] connecting or crawling existing resources
+- [ ]  

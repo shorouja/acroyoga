@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - 'api/**'
+      - 'infra/**'
 
 jobs:
   deploy:
@@ -19,6 +20,8 @@ jobs:
           script: |
             cd /var/www/acroyoga
             git pull origin master
+            sudo cp /var/www/acroyoga/infra/Caddyfile /etc/caddy/Caddyfile
+            sudo systemctl reload caddy
             cd api
             composer install --no-dev --optimize-autoloader
             php bin/console doctrine:migrations:migrate --no-interaction --env=prod

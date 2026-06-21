@@ -1,0 +1,15 @@
+danielschwabe.com, www.danielschwabe.com {
+    handle /bundles/* {
+        root * /var/www/acroyoga/api/public
+        file_server
+    }
+    handle /api* {
+        root * /var/www/acroyoga/api/public
+        php_fastcgi unix//run/php/php8.4-fpm.sock
+        file_server
+    }
+    handle {
+        root * /var/www/acroyoga/frontend
+        file_server
+    }
+}
