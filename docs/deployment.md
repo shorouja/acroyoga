@@ -62,27 +62,41 @@ DATABASE_URL=pgsql://acro_user:<password>@localhost:5432/acroyoga?serverVersion=
 
 ## Caddyfile
 
+`infra/Caddyfile` in the repo is the source of truth. The deploy pipeline copies it to `/etc/caddy/Caddyfile` and reloads Caddy on every push.
+
 ```
-# /etc/caddy/Caddyfile
+# infra/Caddyfile (also written to /etc/caddy/Caddyfile on deploy)
 danielschwabe.com, www.danielschwabe.com {
-    handle_path /api* {
+    handle /bundles/* {
+        root * /var/www/acroyoga/api/public
+        file_server
+    }
+    handle /api* {
         root * /var/www/acroyoga/api/public
         php_fastcgi unix//run/php/php8.4-fpm.sock
         file_server
     }
-    root * /var/www/acroyoga/frontend
-    file_server
+    handle {
+        root * /var/www/acroyoga/frontend
+        file_server
+    }
 }
 ```
 
+Key point: use `handle`, not `handle_path`. `handle_path` strips the matched prefix before passing to PHP — Symfony would receive `/docs` instead of `/api/docs` and routes would not match.
+
 ## Sudoers
 
-`deploy` user can reload php-fpm without a password:
+`deploy` user can reload services and copy the Caddyfile without a password:
 
 ```
 # /etc/sudoers.d/deploy-fpm  (mode 0440)
-deploy ALL=(ALL) NOPASSWD: /bin/systemctl reload php8.4-fpm
+deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload php8.4-fpm
+deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload caddy
+deploy ALL=(ALL) NOPASSWD: /usr/bin/cp /var/www/acroyoga/infra/Caddyfile /etc/caddy/Caddyfile
 ```
+
+On a fresh server, add these entries manually before the first deploy.
 
 ## Local dev
 
@@ -91,7 +105,20 @@ deploy ALL=(ALL) NOPASSWD: /bin/systemctl reload php8.4-fpm
 | PHP | 8.4 via winget (`PHP.PHP.8.4`) |
 | Composer | Official Windows installer |
 | Symfony CLI | GitHub release → `C:\tools\symfony.exe` |
-| Database | SQLite, `api/var/data_dev.db` (gitignored) |
+| Database | PostgreSQL 17 via Docker (`docker-compose.yml` at repo root) |
+
+Start the local database:
+
+```bash
+docker compose up -d
+```
+
+On first run, apply migrations:
+
+```bash
+cd api
+php bin/console doctrine:migrations:migrate
+```
 
 Local env file (gitignored):
 
@@ -100,7 +127,7 @@ Local env file (gitignored):
 APP_ENV=dev
 APP_DEBUG=1
 APP_SECRET=local_dev_secret_not_for_production
-DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_dev.db"
+DATABASE_URL="postgresql://acro_user:local_dev_password@127.0.0.1:5432/acroyoga?serverVersion=17&charset=utf8"
 ```
 
 Verify setup: `php bin/console list`

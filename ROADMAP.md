@@ -23,7 +23,7 @@
 ## Immediate
 
 - [ ] Register endpoint: `POST /api/register` — create user with hashed password
-- [ ] Migrate server schema: pull new auth config to server, run `lexik:jwt:generate-keypair --env=prod`
+- [ ] Migrate server: add sudoers entries for caddy, run `lexik:jwt:generate-keypair --env=prod`, add `JWT_PASSPHRASE` to `.env.local`
 
 ## Mid-Term
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
