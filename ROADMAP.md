@@ -19,10 +19,10 @@
 ## Immediate
 
 ### Data model
-- [ ] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
-- [ ] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
-- [ ] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
-- [ ] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
+- [x] Enums: `Role`, `Difficulty`, `ProgressStatus`, `PartnershipStatus`, `SkillCategory`
+- [x] Core entities: `User`, `Skill`, `Exercise`, `ExerciseGroup`, `ExerciseGroupItem`
+- [x] Progress entities: `UserSkillLevel`, `UserExerciseProgress`
+- [x] Partnership entities: `Partnership`, `PartnershipProgress`, `SessionLog`
 - [ ] Run migrations on server, verify at `/api/docs`
 
 ### Auth
