@@ -81,6 +81,25 @@ class RegistrationControllerTest extends WebTestCase
         self::assertArrayHasKey('password', $body['errors']);
     }
 
+    public function testRejectsOverlongPassword(): void
+    {
+        $client = static::getClient();
+        $client->request(
+            'POST',
+            '/api/register',
+            server: ['CONTENT_TYPE' => 'application/json'],
+            content: json_encode([
+                'email' => 'overlong@example.com',
+                'password' => str_repeat('a', 5000),
+                'displayName' => 'Overlong Pw',
+            ])
+        );
+        $response = $client->getResponse();
+        self::assertSame(422, $response->getStatusCode());
+        $body = json_decode($response->getContent(), true);
+        self::assertArrayHasKey('password', $body['errors']);
+    }
+
     public function testRejectsInvalidEmail(): void
     {
         $response = $this->post([

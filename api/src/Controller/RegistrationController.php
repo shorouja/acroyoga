@@ -47,7 +47,7 @@ class RegistrationController extends AbstractController
             ['email' => $email, 'password' => $password, 'displayName' => $displayName],
             new Assert\Collection([
                 'email' => [new Assert\NotBlank(), new Assert\Email()],
-                'password' => [new Assert\NotBlank(), new Assert\Length(min: 8)],
+                'password' => [new Assert\NotBlank(), new Assert\Length(min: 8, max: 4096)],
                 'displayName' => [new Assert\NotBlank(), new Assert\Length(max: 100)],
             ])
         );
