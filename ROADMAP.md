@@ -19,13 +19,14 @@
 - Migration workflow: PostgreSQL 17 via Docker locally (`docker-compose.yml`), `make:migration` now generates correct SQL
 - Caddyfile in repo (`infra/Caddyfile`), copied to server on every deploy — rebuild-safe
 - JWT auth: `lexik/jwt-authentication-bundle` v3.2, RS256 keypair, `POST /api/login`, API routes protected
+- Register endpoint: `POST /api/register` — validates input, hashes password, returns 201 + user; functional tests added
 
 ## Immediate
 
-- [ ] Register endpoint: `POST /api/register` — create user with hashed password
 - [ ] Migrate server: add sudoers entries for caddy, run `lexik:jwt:generate-keypair --env=prod`, add `JWT_PASSPHRASE` to `.env.local`
 
 ## Mid-Term
+- [ ] Regenerate migrations for PostgreSQL — the initial migration (Version20260621182226) is SQLite-dialect; regenerate from entity metadata so `doctrine:migrations:migrate` works on Postgres
 - [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
 - [ ] Caddyfile: add `try_files` fallback for SPA routing
 - [ ] CORS: configure `nelmio/cors-bundle` for frontend origin
