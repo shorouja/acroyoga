@@ -29,6 +29,15 @@ class RegistrationController extends AbstractController
             return $this->json(['error' => 'Invalid JSON body.'], Response::HTTP_BAD_REQUEST);
         }
 
+        foreach (['email', 'password', 'displayName'] as $field) {
+            if (array_key_exists($field, $data) && $data[$field] !== null && !is_string($data[$field])) {
+                return $this->json(
+                    ['errors' => [$field => 'This value must be a string.']],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+            }
+        }
+
         $email = $data['email'] ?? null;
         $password = $data['password'] ?? null;
         $displayName = $data['displayName'] ?? null;
