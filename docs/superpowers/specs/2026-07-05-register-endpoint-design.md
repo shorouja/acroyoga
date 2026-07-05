@@ -94,10 +94,15 @@ the `password` hash and `roles` are never leaked.
 
 ## Testing
 
-Functional tests using `WebTestCase` against a **migrated test Postgres** (Dockerized
-local DB). Test-harness setup must confirm the test DB exists and is migrated —
-one test asserts a row is actually persisted, so a suite that never touched Postgres
-cannot pass silently.
+Functional tests using `WebTestCase` against a **Postgres test DB** (`acroyoga_test`,
+Dockerized local DB). The schema is built with `doctrine:schema:create --env=test`
+(Postgres DDL from entity metadata) rather than `migrations:migrate` — the existing
+migration is SQLite-dialect and cannot replay on Postgres (tracked as a separate
+roadmap task: "Regenerate migrations for Postgres"). One test asserts a row is
+actually persisted, so a suite that never touched Postgres cannot pass silently.
+
+> **Environment prerequisite:** tests require Docker Postgres running and a PHP with
+> the `pdo_pgsql` extension enabled. The register endpoint code and config do not.
 
 Test cases:
 
