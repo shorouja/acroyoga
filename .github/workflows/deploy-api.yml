@@ -17,7 +17,12 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
+          # Abort the deploy on the first failed command. Without this the
+          # action only surfaces the LAST command's exit code, so a failed
+          # git pull or migration was reported as a green deploy.
+          script_stop: true
           script: |
+            set -euo pipefail
             cd /var/www/acroyoga
             git pull origin master
             sudo cp /var/www/acroyoga/infra/Caddyfile /etc/caddy/Caddyfile
