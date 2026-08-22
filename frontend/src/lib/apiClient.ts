@@ -4,8 +4,8 @@ import type { HydraCollection } from '../types'
 export class ApiError extends Error {
   status: number
   fieldErrors?: Record<string, string>
-  constructor(status: number, message: string, fieldErrors?: Record<string, string>) {
-    super(message)
+  constructor(status: number, message: string, fieldErrors?: Record<string, string>, cause?: unknown) {
+    super(message, cause !== undefined ? { cause } : undefined)
     this.name = 'ApiError'
     this.status = status
     this.fieldErrors = fieldErrors
@@ -25,12 +25,13 @@ async function request<T>(method: 'GET' | 'POST', path: string, body?: unknown):
   let res: Response
   try {
     res = await fetch(`/api${path}`, { method, headers, body: body !== undefined ? JSON.stringify(body) : undefined })
-  } catch {
-    throw new ApiError(0, 'Network error — is the API reachable?')
+  } catch (cause) {
+    throw new ApiError(0, 'Network error — is the API reachable?', undefined, cause)
   }
 
   if (res.status === 401) {
     clearToken()
+    window.dispatchEvent(new Event('auth:unauthorized'))
     throw new ApiError(401, 'Unauthorized')
   }
 

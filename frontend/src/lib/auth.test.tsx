@@ -4,7 +4,7 @@ import { describe, expect, test } from 'vitest'
 import { server } from '../test/server'
 import { AuthProvider, useAuth } from './auth'
 import { getToken } from './tokenStore'
-import { ApiError } from './apiClient'
+import { apiGet, ApiError } from './apiClient'
 import type { ReactNode } from 'react'
 
 const wrapper = ({ children }: { children: ReactNode }) => <AuthProvider>{children}</AuthProvider>
@@ -42,6 +42,20 @@ describe('auth', () => {
     await act(async () => { await result.current.login('a@b.com', 'secret123') })
     act(() => { result.current.logout() })
     expect(getToken()).toBeNull()
+    expect(result.current.isAuthenticated).toBe(false)
+  })
+
+  test('a 401 from any API call flips isAuthenticated to false without the caller invoking logout', async () => {
+    server.use(http.post('/api/login', () => HttpResponse.json({ token: 'jwt-abc' })))
+    const { result } = renderHook(() => useAuth(), { wrapper })
+    await act(async () => { await result.current.login('a@b.com', 'secret123') })
+    expect(result.current.isAuthenticated).toBe(true)
+
+    server.use(http.get('/api/exercises', () => new HttpResponse(null, { status: 401 })))
+    await act(async () => {
+      await expect(apiGet('/exercises')).rejects.toMatchObject({ status: 401 })
+    })
+
     expect(result.current.isAuthenticated).toBe(false)
   })
 })

@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { apiGet, ApiError } from '../lib/apiClient'
-import { useAuth } from '../lib/auth'
 import type { Skill } from '../types'
 
 export default function SkillDetail() {
   const { id } = useParams()
-  const { logout } = useAuth()
   const [item, setItem] = useState<Skill | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -16,11 +14,11 @@ export default function SkillDetail() {
       .then((s) => { if (active) setItem(s) })
       .catch((e) => {
         if (!active) return
-        if (e instanceof ApiError && e.status === 401) { logout(); return }
+        if (e instanceof ApiError && e.status === 401) return
         setError("Couldn't load this skill.")
       })
     return () => { active = false }
-  }, [id, logout])
+  }, [id])
 
   if (error) return <p role="alert" className="p-8 text-red-600">{error}</p>
   if (!item) return <p className="p-8">Loading…</p>

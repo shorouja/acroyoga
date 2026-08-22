@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { apiGet, ApiError } from '../lib/apiClient'
-import { useAuth } from '../lib/auth'
 import type { Exercise } from '../types'
 
 export default function ExerciseDetail() {
   const { id } = useParams()
-  const { logout } = useAuth()
   const [item, setItem] = useState<Exercise | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -16,11 +14,11 @@ export default function ExerciseDetail() {
       .then((e) => { if (active) setItem(e) })
       .catch((e) => {
         if (!active) return
-        if (e instanceof ApiError && e.status === 401) { logout(); return }
+        if (e instanceof ApiError && e.status === 401) return
         setError("Couldn't load this exercise.")
       })
     return () => { active = false }
-  }, [id, logout])
+  }, [id])
 
   if (error) return <p role="alert" className="p-8 text-red-600">{error}</p>
   if (!item) return <p className="p-8">Loading…</p>

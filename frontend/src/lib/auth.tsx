@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { apiPost } from './apiClient'
 import { clearToken, getToken, setToken } from './tokenStore'
 
@@ -29,6 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const logout = useCallback(() => { clearToken(); setTok(null) }, [])
+
+  useEffect(() => {
+    const onUnauthorized = () => { logout() }
+    window.addEventListener('auth:unauthorized', onUnauthorized)
+    return () => window.removeEventListener('auth:unauthorized', onUnauthorized)
+  }, [logout])
 
   const value = useMemo<AuthValue>(
     () => ({ isAuthenticated: token !== null, login, register, logout }),
