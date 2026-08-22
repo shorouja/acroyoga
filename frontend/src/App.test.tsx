@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
-test('renders the app heading', () => {
-  render(<App />)
-  expect(screen.getByRole('heading', { name: 'Acroyoga' })).toBeInTheDocument()
+test('unauthenticated user lands on login', () => {
+  render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>)
+  expect(screen.getByRole('heading', { name: /log in/i })).toBeInTheDocument()
 })
