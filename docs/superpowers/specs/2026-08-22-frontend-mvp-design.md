@@ -10,7 +10,7 @@ Ship the thinnest end-to-end slice of a web frontend for the acroyoga platform: 
 
 ## Tech stack
 
-- **React 18 + Vite + TypeScript** — fast SPA build Caddy can serve statically; best API Platform tooling and ecosystem coverage.
+- **React 19 + Vite + TypeScript** — fast SPA build Caddy can serve statically; best API Platform tooling and ecosystem coverage.
 - **Tailwind CSS** — utility-first styling, fast iteration.
 - **React Router** — client-side routing.
 - No state-management library (React Context is sufficient for MVP). No SSR.

@@ -4,9 +4,9 @@
 
 **Goal:** Ship a React SPA where a user can register/log in (JWT) and browse the read-only exercise + skill library.
 
-**Architecture:** React 18 + Vite + TypeScript SPA in `frontend/`, talking to the existing Symfony/API Platform backend at `/api`. A thin typed `apiClient` attaches the JWT and unwraps Hydra JSON-LD; a React Context holds auth state (token in `localStorage`); React Router gates the library behind a `ProtectedRoute`. Served same-origin (Vite dev proxy in dev; Caddy static in prod), so no CORS.
+**Architecture:** React 19 + Vite + TypeScript SPA in `frontend/`, talking to the existing Symfony/API Platform backend at `/api`. A thin typed `apiClient` attaches the JWT and unwraps Hydra JSON-LD; a React Context holds auth state (token in `localStorage`); React Router gates the library behind a `ProtectedRoute`. Served same-origin (Vite dev proxy in dev; Caddy static in prod), so no CORS.
 
-**Tech Stack:** React 18, Vite, TypeScript, Tailwind CSS v4, React Router v6, Vitest + React Testing Library + jsdom, MSW v2 (API mocking).
+**Tech Stack:** React 19, Vite, TypeScript, Tailwind CSS v4, React Router v6, Vitest + React Testing Library + jsdom, MSW v2 (API mocking).
 
 **Spec:** `docs/superpowers/specs/2026-08-22-frontend-mvp-design.md`
 
