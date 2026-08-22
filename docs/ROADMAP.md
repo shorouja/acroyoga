@@ -25,7 +25,7 @@
 ## Immediate
 
 - [x] **Deploy pipeline swallows failures** — FIXED (PR #29 → master `b132492`): added `script_stop: true` + `set -euo pipefail` to `deploy-api.yml`, so the first failed command now aborts the deploy instead of reporting green.
-- [ ] **Prod migration-state reconciliation (gate before next dev → master promotion)** — `dev` now carries the regenerated Postgres migration (`Version20260822180806`, #34), but prod's `doctrine_migration_versions` still records the OLD version (`20260621182226`) as applied against a manually-built schema. Deploying as-is makes `migrations:migrate` try to run the new migration on the existing schema and **fail loudly** (post-#29). Before promoting: on the server, delete the old version row and insert `DoctrineMigrations\Version20260822180806` as already-applied (or `doctrine:migrations:version --add`). Only then is the branch safe to reach master.
+- [x] **Prod migration-state reconciliation** — DONE 2026-08-22 (#36). Reconciled prod's `doctrine_migration_versions` (removed old `20260621182226` row, inserted `DoctrineMigrations\Version20260822180806`), then merged dev→master. Deploy went green; migrate reported `[OK] Already at the latest version` — clean no-op, no schema change. First truthful green deploy since the fail-loud fix (#29). Fresh-server rebuilds via `migrate` now work.
 - [ ] Migrate server: add sudoers entries for caddy, run `lexik:jwt:generate-keypair --env=prod`, add `JWT_PASSPHRASE` to `.env.local`
 
 ## Mid-Term
