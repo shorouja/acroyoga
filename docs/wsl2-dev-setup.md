@@ -13,11 +13,31 @@ and not via Docker Desktop.
 - The distro mirrors the **Debian 13** production server, so "works locally"
   means much more (dev/prod parity).
 
-> **Before you start — rescue the Windows clone.** The current Windows working
-> copy at `d:\dev\acroyoga` has a local-only branch `feature/deploy-pipeline-findings`
-> that isn't pushed. Push it (or open its PR into `dev`) **before** you stop using
-> the Windows clone, or that work is stranded. Everything else is already on the
-> remote.
+> **Before you start — check the Windows clone.** As of 2026-07-05 all work is
+> pushed and `dev`/`master` are aligned, so nothing is stranded. Before you stop
+> using the Windows copy at `d:\dev\acroyoga`, run `git status` there and push any
+> uncommitted work or local-only branches.
+
+## Progress checklist
+
+Time estimates are first-run wall-clock (hands-on + downloads). Setup total:
+**~60–90 min if smooth; budget 1.5–2 hrs** with troubleshooting. Step 11 is a
+separate work item, not setup.
+
+- [ ] **1. Install WSL2 + Debian** — `wsl --install -d Debian`, reboot, create user _(10–20 min, low)_
+- [ ] **2. Enable systemd** — `/etc/wsl.conf` + `wsl --shutdown` _(~5 min, trivial)_
+- [ ] **3. Base packages + Git + GitHub SSH key** — keygen → add on github.com → `ssh -T` _(10–15 min, low-med; manual web step)_
+- [ ] **4. Docker Engine in WSL2** — repo, install, `usermod -aG docker`, restart, `hello-world` _(10–15 min, ⚠️ med; group change needs a restart)_
+- [ ] **5. PHP 8.4 + `pdo_pgsql`** via Sury repo _(5–10 min, low-med — the payoff step)_
+- [ ] **6. Composer + Symfony CLI** _(~5 min, low)_
+- [ ] **7. Clone repo onto ext4 (`~/dev/…`) + `composer install`** _(5–15 min, low)_
+- [ ] **8. `.env.local` + `lexik:jwt:generate-keypair`** _(~5 min, low)_
+- [ ] **9. `docker compose up -d db` + `doctrine:schema:create`** _(~5 min, low; first image pull ~1–2 min)_
+- [ ] **10. Verify** — `dbal:run-sql "SELECT version()"`, DDL dump, `phpunit` _(~5 min, low)_
+- [ ] **12. VS Code Remote-WSL** — install extension, `code .` _(~5 min, low)_
+- [ ] **11. Regenerate Postgres migration** — *separate work item, ~30–60 min:* `make:migration` on empty local Postgres → review DDL → reconcile with prod's already-recorded version
+
+**Likely time sinks:** systemd not starting after step 2; Docker "cannot connect" until the post-`usermod` restart; Sury key/repo quirks on a newer Debian base; forgetting to add the GitHub SSH key before the clone.
 
 ---
 
