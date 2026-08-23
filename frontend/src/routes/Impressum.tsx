@@ -14,7 +14,7 @@ export default function Impressum() {
 
       <h2 className="mb-2 text-lg font-semibold">Kontakt</h2>
       <p className="mb-4">
-        E-Mail: <a href="mailto:schwabe.daniel@yahoo.de" className="underline">schwabe.daniel@yahoo.de</a>
+        E-Mail: <a href="mailto:h1596-acroyoga_imprint@yahoo.com" className="underline">h1596-acroyoga_imprint@yahoo.com</a>
       </p>
 
       <h2 className="mb-2 text-lg font-semibold">Verantwortlich für den Inhalt</h2>
