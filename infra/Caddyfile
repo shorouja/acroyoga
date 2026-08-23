@@ -3,6 +3,15 @@ danielschwabe.com, www.danielschwabe.com {
         root * /var/www/acroyoga/api/public
         file_server
     }
+    # Maintenance mode: block account/data-collection endpoints at the edge so
+    # no personal data can be submitted while the app is hidden. More specific
+    # path matchers win over /api* below. Remove these two blocks to re-open.
+    handle /api/register {
+        respond "Service temporarily unavailable" 503
+    }
+    handle /api/login {
+        respond "Service temporarily unavailable" 503
+    }
     handle /api* {
         root * /var/www/acroyoga/api/public
         php_fastcgi unix//run/php/php8.4-fpm.sock
