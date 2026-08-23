@@ -44,7 +44,7 @@
 ## Operations
 - [~] PostgreSQL backups: daily local `pg_dump` + cron (`infra/backup.sh`, 14-day retention) + manual pull to a personal machine (`infra/pull-backups.sh`); runbook `docs/backups.md`. **Local-only for now** — cloud offsite (B2/S3) + gpg encryption is a documented TODO. Server-side cron install is a one-time manual step (see runbook).
 - [ ] Uptime monitoring (UptimeRobot free tier)
-- [ ] `unattended-upgrades` for automatic OS security patches
+- [~] `unattended-upgrades` for automatic OS security patches — config + runbook in `docs/server-maintenance.md` (security-only, auto-reboot 04:00, Caddy/PG left manual). Server-side install/enable is a one-time manual step.
 
 ## Security & Compliance
 - [ ] Transactional email: Brevo / Postmark + SPF/DKIM/DMARC DNS records
