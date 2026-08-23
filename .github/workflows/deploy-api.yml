@@ -18,11 +18,10 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          # Abort the deploy on the first failed command. Without this the
-          # action only surfaces the LAST command's exit code, so a failed
-          # git pull or migration was reported as a green deploy.
-          script_stop: true
           script: |
+            # Abort the deploy on the first failed command. Without set -e the
+            # SSH session only returns the LAST command's exit code, so a failed
+            # git pull or migration would be reported as a green deploy.
             set -euo pipefail
             cd /var/www/acroyoga
             git pull origin master
