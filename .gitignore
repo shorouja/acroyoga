@@ -12,3 +12,5 @@ docs/.obsidian/
 # composer.lock
 server-setup-doc.html
 .env.local
+# Superpowers SDD scratch
+.superpowers/
