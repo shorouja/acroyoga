@@ -21,20 +21,24 @@
 - Caddyfile in repo (`infra/Caddyfile`), copied to server on every deploy — rebuild-safe
 - JWT auth: `lexik/jwt-authentication-bundle` v3.2, RS256 keypair, `POST /api/login`, API routes protected
 - Register endpoint: `POST /api/register` — validates input, hashes password, returns 201 + user; functional tests added
+- Frontend MVP scaffolded into `frontend/` — React 19 + Vite + TS + Tailwind SPA: register/login (JWT), read-only exercise/skill library over API Platform Hydra; 16 Vitest+RTL tests (#38)
+- Frontend deployed to prod (danielschwabe.com) — build-on-server pipeline (`npm ci && npm run build` in the deploy SSH script), Caddy `try_files` for SPA deep links; live + smoke-tested green 2026-08-23 (#40)
+- Prod JWT verified working end-to-end — `POST /api/login` returns proper 401 on bad creds (keypair present on prod), so auth is operational live
 
 ## Immediate
 
 - [x] **Deploy pipeline swallows failures** — FIXED (PR #29 → master `b132492`): added `script_stop: true` + `set -euo pipefail` to `deploy-api.yml`, so the first failed command now aborts the deploy instead of reporting green.
 - [x] **Prod migration-state reconciliation** — DONE 2026-08-22 (#36). Reconciled prod's `doctrine_migration_versions` (removed old `20260621182226` row, inserted `DoctrineMigrations\Version20260822180806`), then merged dev→master. Deploy went green; migrate reported `[OK] Already at the latest version` — clean no-op, no schema change. First truthful green deploy since the fail-loud fix (#29). Fresh-server rebuilds via `migrate` now work.
-- [ ] Migrate server: add sudoers entries for caddy, run `lexik:jwt:generate-keypair --env=prod`, add `JWT_PASSPHRASE` to `.env.local`
+- [x] Migrate server: sudoers for caddy + JWT keypair on prod — DONE. Prod `POST /api/login` returns a proper 401 on bad creds (not 500), confirming the RS256 keypair + `JWT_PASSPHRASE` are in place and auth is operational live (verified 2026-08-23).
+- [ ] **Legal (Germany): Impressum + Datenschutzerklärung** — required for a public, live site collecting registrations. Interim mitigation under consideration: replace the public site with a maintenance view to remove the data-collection surface until the legal pages exist.
 
 ## Mid-Term
 - [x] Regenerate migrations for PostgreSQL — DONE 2026-08-22 (#34). Replaced the SQLite-dialect `Version20260621182226` with `Version20260822180806`, generated via `doctrine:migrations:diff` against real Postgres 17 in the new WSL2 env; `migrate` applies cleanly (41 queries, 11 tables) and `schema:validate` passes. **Follow-up:** prod migration-state reconciliation before deploy — tracked as an Immediate gate above.
 - [x] **Local dev env → WSL2 full toolchain** — DONE 2026-08-22. Debian 13 (trixie) WSL2 distro, systemd, user `hausmeister` (passwordless sudo); PHP 8.4 + `pdo_pgsql`, Composer, Symfony CLI, native Docker Engine, Postgres 17 via `docker compose`. Repo cloned to ext4 at `~/dev/acroyoga`. Mirrors the Debian 13 prod server. Guide: `docs/wsl2-dev-setup.md`. **Remaining polish:** GitHub SSH auth inside WSL (currently pull/push done from Windows side); update `deployment.md` Local dev section to describe WSL2 instead of the never-installed Windows/Docker-Desktop setup.
-- [ ] Frontend: choose framework (React / Vue / Angular), scaffold into `frontend/`
-- [ ] Caddyfile: add `try_files` fallback for SPA routing
-- [ ] CORS: configure `nelmio/cors-bundle` for frontend origin
-- [ ] GitHub Actions: add frontend deploy job
+- [x] Frontend: choose framework, scaffold into `frontend/` — DONE (#38). React 19 + Vite + TS + Tailwind.
+- [x] Caddyfile: add `try_files` fallback for SPA routing — DONE (#40). `try_files {path} /index.html`.
+- [x] CORS: N/A — frontend is served same-origin by Caddy (Vite proxy in dev), so no `nelmio/cors-bundle` needed.
+- [x] GitHub Actions: add frontend deploy job — DONE (#40). Build-on-server in the existing deploy workflow (triggers on `frontend/**`).
 - [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 
 ## Operations
