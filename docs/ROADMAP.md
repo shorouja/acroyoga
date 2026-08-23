@@ -42,7 +42,7 @@
 - [ ] Server provisioning: consider a full bootstrap script (`infra/setup.sh`) that configures Caddyfile, sudoers, and PHP-FPM from scratch — valuable if the VPS is ever rebuilt or replicated (currently handled by docs + pipeline steps)
 
 ## Operations
-- [ ] PostgreSQL backups: `pg_dump` + cron + offsite (Backblaze B2 or S3)
+- [~] PostgreSQL backups: daily local `pg_dump` + cron (`infra/backup.sh`, 14-day retention) + manual pull to a personal machine (`infra/pull-backups.sh`); runbook `docs/backups.md`. **Local-only for now** — cloud offsite (B2/S3) + gpg encryption is a documented TODO. Server-side cron install is a one-time manual step (see runbook).
 - [ ] Uptime monitoring (UptimeRobot free tier)
 - [ ] `unattended-upgrades` for automatic OS security patches
 
