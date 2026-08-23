@@ -1,10 +1,11 @@
-name: Deploy API
+name: Deploy
 
 on:
   push:
     branches: [master]
     paths:
       - 'api/**'
+      - 'frontend/**'
       - 'infra/**'
 
 jobs:
@@ -25,6 +26,12 @@ jobs:
             set -euo pipefail
             cd /var/www/acroyoga
             git pull origin master
+            # Build the SPA on the server (dist/ is gitignored). npm ci installs
+            # devDependencies too, which include vite — needed for the build.
+            cd frontend
+            npm ci
+            npm run build
+            cd /var/www/acroyoga
             sudo cp /var/www/acroyoga/infra/Caddyfile /etc/caddy/Caddyfile
             sudo systemctl reload caddy
             cd api
