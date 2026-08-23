@@ -9,7 +9,10 @@ danielschwabe.com, www.danielschwabe.com {
         file_server
     }
     handle {
-        root * /var/www/acroyoga/frontend
+        root * /var/www/acroyoga/frontend/dist
+        # SPA deep links (e.g. /exercises/5) must fall back to index.html
+        # so the client-side router can handle them instead of 404ing.
+        try_files {path} /index.html
         file_server
     }
 }
