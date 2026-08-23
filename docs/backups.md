@@ -63,6 +63,44 @@ Just the latest dump, no rsync:
 scp ADMIN_USER@danielschwabe.com:/var/backups/acroyoga/acroyoga-$(date +%F).sql.gz .
 ```
 
+### From Windows (PowerShell)
+
+Windows OpenSSH already has the working `deploy` key (it's what VSCode Remote-SSH
+uses), but Windows has no `rsync` — use `scp`. Create the destination folder
+first, or scp errors with `open local ... Unknown error`:
+
+```powershell
+mkdir "$HOME\acroyoga-backups" -Force
+# All dumps (dataset is tiny, so re-copying everything is fine):
+scp deploy@danielschwabe.com:/var/backups/acroyoga/* "$HOME\acroyoga-backups\"
+dir "$HOME\acroyoga-backups"
+```
+
+To use the WSL `rsync` path instead, copy your Windows SSH key + config into WSL
+once (see below), then `infra/pull-backups.sh` works from WSL.
+
+### Enabling the WSL rsync path (one-time)
+
+The Windows SSH key lives on the C: drive, mounted in WSL at
+`/mnt/c/Users/<you>/.ssh/`. Copy the key + config into WSL and fix permissions
+(SSH refuses keys that are group/world-readable):
+
+```bash
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+WIN_SSH=/mnt/c/Users/DanielArbeit/.ssh          # adjust to your Windows user
+cp "$WIN_SSH"/config ~/.ssh/ 2>/dev/null || true
+cp "$WIN_SSH"/id_* ~/.ssh/ 2>/dev/null           # copies both private + .pub keys
+chmod 600 ~/.ssh/id_* ~/.ssh/config 2>/dev/null
+chmod 644 ~/.ssh/*.pub 2>/dev/null || true
+ssh deploy@danielschwabe.com "echo ok"           # verify: should print ok
+```
+
+Then the rsync pull works from WSL and only transfers new dumps:
+
+```bash
+ACRO_SSH=deploy@danielschwabe.com ./infra/pull-backups.sh
+```
+
 ## Restoring (test this — an untested backup is not a backup)
 
 Restore into a **scratch database** first to verify a dump, never straight over
