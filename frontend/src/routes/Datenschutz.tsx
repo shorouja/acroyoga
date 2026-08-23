@@ -10,7 +10,7 @@ export default function Datenschutz() {
         Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
         Daniel Schwabe<br />
         Paul-Lange-Bey-Straße 28, 14476 Potsdam<br />
-        E-Mail: <a href="mailto:schwabe.daniel@yahoo.de" className="underline">schwabe.daniel@yahoo.de</a>
+        E-Mail: <a href="mailto:h1596-acroyoga_imprint@yahoo.com" className="underline">h1596-acroyoga_imprint@yahoo.com</a>
       </p>
 
       <h2 className="mb-2 text-lg font-semibold">2. Server-Logfiles</h2>
